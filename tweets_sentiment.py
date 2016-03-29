@@ -12,25 +12,21 @@ def mapper(each_tweet):
     global count
     for key in each_tweet:
         if key=="text":
-            #print(each_tweet[key])
             for word in each_tweet[key].split(" "):
                 if "#" in word:
                     word=word.split("#")[0]
                 url = re.compile('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))')
                 retw=re.compile("(?<!RT\s)@\S+")
+                
                 if url.match(word) or word.startswith('#') or retw.match(word) or word=="RT" or word.startswith('@'):
                     continue
                 word=word.lower()
-                #print(word)
                 word=word.encode('UTF-8').translate(None,string.punctuation)
-                #print(word)
-                #for item in scores:
+                
                 if word in scores:
                     mr.emit_intermediate(count,scores[word])
                 else:
                     mr.emit_intermediate(count,0)
-                        # print(count)
-                        # print(scores[word])
     count=count+1
 
 
@@ -39,7 +35,6 @@ def reducer(key, list_of_values):
     for value in list_of_values:
         tot=tot+value
     mr.emit((key,float(tot)))
-
 
 
 if __name__ == '__main__':
