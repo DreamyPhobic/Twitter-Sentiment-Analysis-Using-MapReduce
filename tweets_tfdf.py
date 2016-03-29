@@ -13,20 +13,16 @@ def mapper(each_tweet):
     for key in each_tweet:
         if key=="text":
             d=[]
-            #print(each_tweet[key])
             for word in each_tweet[key].split(" "):
-
                 p=[]
                 url = re.compile('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))')
                 retw=re.compile("(?<!RT\s)@\S+")
                 if url.match(word) or word.startswith('#') or retw.match(word) or word=="RT" or word.startswith('@') or word.startswith("retweet"):
                     continue
                 word=word.lower()
-
                 word=word.encode('UTF-8').translate(None,string.punctuation)
                 if word=="":
                     continue
-                #print(word)
                 if word in counter:
                     counter[word] += 1
                 else:
@@ -44,9 +40,7 @@ def reducer(key, list_of_values):
     for id, value in list_of_values:
         total += 1
         li.append((id, value))
-
     mr.emit((key, total, li))
-
 
 
 if __name__ == '__main__':
